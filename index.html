@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💕 Couple Quiz — Siapa Lebih Kenal?</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- ====================== SETUP SCREEN ====================== -->
+  <div id="setup-screen" class="screen active">
+    <div class="card">
+      <h1 class="logo">💕 Couple Quiz</h1>
+      <p class="subtitle">Siapa yang lebih kenal pasangannya?</p>
+      
+      <div class="input-group">
+        <label>👩 Nama Pasangan 1</label>
+        <input type="text" id="player1-name" placeholder="cth: Sayang" maxlength="20">
+      </div>
+      
+      <div class="input-group">
+        <label>👨 Nama Pasangan 2</label>
+        <input type="text" id="player2-name" placeholder="cth: Babe" maxlength="20">
+      </div>
+      
+      <div class="input-group">
+        <label>🎯 Jumlah Pertanyaan</label>
+        <select id="num-questions">
+          <option value="5">5 (Cepat)</option>
+          <option value="10" selected>10 (Standar)</option>
+          <option value="15">15 (Lumayan)</option>
+          <option value="20">20 (Serius!)</option>
+        </select>
+      </div>
+      
+      <div class="input-group">
+        <label>🎨 Kategori</label>
+        <select id="category">
+          <option value="all" selected>🎲 Campur Semua</option>
+          <option value="romantic">💕 Romantis</option>
+          <option value="funny">😂 Kocak</option>
+          <option value="deep">🤔 Dalam</option>
+          <option value="would">🤞 Would You Rather</option>
+        </select>
+      </div>
+      
+      <button id="start-btn" class="btn-primary">Mulai Main! 🎮</button>
+      
+      <div class="rules">
+        <p><strong>📝 Cara Main:</strong></p>
+        <p>1. Pasangan 1 jawab dulu tentang dirinya sendiri</p>
+        <p>2. Pasangan 2 nebak jawaban Pasangan 1</p>
+        <p>3. Gantian! Pilih yang cocok dengan pasanganmu</p>
+        <p>4. Yang paling banyak tebakan benar — MENANG! 🏆</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== PLAYER1 ANSWER SCREEN ====================== -->
+  <div id="p1-answer-screen" class="screen">
+    <div class="card">
+      <div class="turn-indicator">
+        <span class="player-badge" id="p1-badge">👩</span>
+        <h2 id="p1-answer-title">Sayang, jawab ya!</h2>
+        <p class="turn-hint">Jawab jujur tentang dirimu 👀</p>
+      </div>
+      
+      <div class="progress">
+        <span id="p1-progress">Soal 1/10</span>
+        <div class="progress-bar"><div id="p1-bar" class="progress-fill"></div></div>
+      </div>
+      
+      <div class="question" id="p1-question"></div>
+      <div class="options" id="p1-options"></div>
+      
+      <button id="p1-next-btn" class="btn-primary hidden">Lanjut ke Pasangan 👉</button>
+    </div>
+  </div>
+
+  <!-- ====================== PLAYER2 GUESS SCREEN ====================== -->
+  <div id="p2-guess-screen" class="screen">
+    <div class="card">
+      <div class="turn-indicator">
+        <span class="player-badge" id="p2-badge">👨</span>
+        <h2 id="p2-guess-title">Babe, tebak ya!</h2>
+        <p class="turn-hint">Nebak jawaban pasanganmu 🤔</p>
+      </div>
+      
+      <div class="progress">
+        <span id="p2-progress">Soal 1/10</span>
+        <div class="progress-bar"><div id="p2-bar" class="progress-fill"></div></div>
+      </div>
+      
+      <div class="question" id="p2-question"></div>
+      <div class="options" id="p2-options"></div>
+      
+      <div id="p2-result" class="result-feedback hidden"></div>
+      <button id="p2-next-btn" class="btn-primary hidden">Lanjut 👉</button>
+    </div>
+  </div>
+
+  <!-- ====================== ROUND REVEAL SCREEN ====================== -->
+  <div id="reveal-screen" class="screen">
+    <div class="card">
+      <h2 class="reveal-title">💡 Hasilnya...</h2>
+      <div class="reveal-question" id="reveal-question"></div>
+      <div class="reveal-answers">
+        <div class="reveal-answer">
+          <span class="reveal-label" id="reveal-p1-name"></span>
+          <span class="reveal-value" id="reveal-p1-answer"></span>
+        </div>
+        <div class="reveal-answer">
+          <span class="reveal-label" id="reveal-p2-name"></span>
+          <span class="reveal-value" id="reveal-p2-answer"></span>
+          <span class="reveal-status" id="reveal-status"></span>
+        </div>
+      </div>
+      <button id="reveal-next-btn" class="btn-primary">Soal Berikutnya 👉</button>
+    </div>
+  </div>
+
+  <!-- ====================== RESULTS SCREEN ====================== -->
+  <div id="results-screen" class="screen">
+    <div class="card">
+      <h1 class="logo">🏆 Hasil Akhir</h1>
+      <div class="winner-banner" id="winner-banner"></div>
+      <div class="score-display">
+        <div class="score-card">
+          <span class="score-name" id="result-p1-name"></span>
+          <span class="score-value" id="result-p1-score">0</span>
+          <span class="score-label">tebakan benar</span>
+        </div>
+        <div class="score-divider">VS</div>
+        <div class="score-card">
+          <span class="score-name" id="result-p2-name"></span>
+          <span class="score-value" id="result-p2-score">0</span>
+          <span class="score-label">tebakan benar</span>
+        </div>
+      </div>
+      <div class="final-message" id="final-message"></div>
+      <button id="restart-btn" class="btn-primary">Main Lagi 🔄</button>
+    </div>
+  </div>
+
+  <!-- Confetti canvas -->
+  <canvas id="confetti"></canvas>
+
+  <script src="questions.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
