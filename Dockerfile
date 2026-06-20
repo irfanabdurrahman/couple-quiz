@@ -1,13 +1,23 @@
 FROM nginx:alpine
 
-# Copy static files to nginx serve directory
 COPY index.html /usr/share/nginx/html/
 COPY style.css /usr/share/nginx/html/
 COPY questions.js /usr/share/nginx/html/
 COPY game.js /usr/share/nginx/html/
 
-# Expose port 80
-EXPOSE 80
+# Replace nginx default config to listen on PORT env (Railway sets this)
+RUN printf 'server {\n\
+    listen $PORT;\n\
+    root /usr/share/nginx/html;\n\
+    index index.html;\n\
+    location / { try_files $uri $uri/ =404; }\n\
+}\n' > /etc/nginx/conf.d/default.conf
 
-# nginx serves on port 80 by default
-CMD ["nginx", "-g", "daemon off;"]
+# Remove the default nginx config that listens on port 80
+RUN rm -f /etc/nginx/conf.d/default.conf.bak
+
+# Entrypoint: substitute $PORT and start nginx
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
